@@ -7,6 +7,7 @@ import {
   updateUser,
   login,
   verifyToken,
+  checkEmail,
 } from "../controllers/users.controllers.js";
 import {
   addFav,
@@ -24,7 +25,7 @@ router.delete("/users/:id", verifyToken, deleteUser);
 
 router.patch("/users/:id", verifyToken, updateUser);
 
-router.post("/signUp", signUp);
+router.post("/signUp", checkEmail, signUp);
 router.post("/login", login);
 
 router.post("/favorite/:user_id", addFav);

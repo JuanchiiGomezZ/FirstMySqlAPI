@@ -44,6 +44,50 @@ export const updateUser = async (req, res) => {
   }
 };
 
+export const getUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const [rows] = await pool.query(`SELECT * FROM users WHERE id = ?`, [id]);
+    if (rows.length <= 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(rows[0]);
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+export const checkEmail = async (req, res, next) => {
+  const { email } = req.body;
+  const [existingUser] = await pool.query(
+    "SELECT * FROM users WHERE email = ?",
+    [email]
+  );
+  if (existingUser.length > 0) {
+    return res.status(500).json({ message: "That email is already used" });
+  } else {
+    next();
+  }
+};
+
+export const signUp = async (req, res) => {
+  try {
+    const { name, lastname, email, password } = req.body;
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    await pool.query(
+      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
+      [name, lastname, email, hashedPassword]
+    );
+    const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
+    return res.json({ token });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Ha ocurrido un error al intentar registrar el usuario",
+    });
+  }
+};
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];
@@ -62,54 +106,6 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
-
-export const getUser = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const [rows] = await pool.query(`SELECT * FROM users WHERE id = ?`, [id]);
-    if (rows.length <= 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json(rows[0]);
-  } catch (error) {
-    return res.status(500).json({ message: "Something goes wrong" });
-  }
-};
-
-export const checkEmail = async (email) => {
-  const [existingUser] = await pool.query(
-    "SELECT * FROM users WHERE email = ?",
-    [email]
-  );
-  return existingUser.length > 0;
-};
-
-export const signUp = async (req, res) => {
-  try {
-    const { name, lastname, email, password } = req.body;
-
-    const emailExists = await checkEmail(email);
-
-    if (emailExists) {
-      return res.status(500).json({ message: "That email is already used" });
-    } else {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      await pool.query(
-        "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
-        [name, lastname, email, hashedPassword]
-      );
-      const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-      return res.json({ token });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Ha ocurrido un error al intentar registrar el usuario",
-    });
-  }
-};
-
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
