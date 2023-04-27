@@ -85,8 +85,7 @@ export const signUp = async (req, res) => {
       "SELECT * FROM users WHERE email = ?",
       [email]
     );
-    if (existingUser.length > 0) {
-      console.log(existingUser.length)
+    if (!!existingUser[0]) {
       return res.status(500).json({ message: "That email already exists" });
     } else {
       // Encriptar la contraseña antes de almacenarla en la base de datos
@@ -99,8 +98,6 @@ export const signUp = async (req, res) => {
       const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
       res.json({ token });
     }
-
-    res.json({ token });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Something goes wrong" });
@@ -114,7 +111,7 @@ export const login = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
-    
+
     if (rows.length === 0) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -134,5 +131,3 @@ export const login = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
-
