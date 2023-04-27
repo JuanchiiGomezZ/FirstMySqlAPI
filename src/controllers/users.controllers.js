@@ -76,22 +76,23 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const checkEmail = async (email) => {
+  const [existingUser] = await pool.query(
+    "SELECT * FROM users WHERE email = ?",
+    [email]
+  );
+  return existingUser.length > 0;
+};
+
 export const signUp = async (req, res) => {
   try {
     const { name, lastname, email, password } = req.body;
 
-    // Verificar si el correo electrónico ya está en uso
-    const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email]
-    );
+    const emailExists = await checkEmail(email);
 
-    if (existingUser.length > 0) {
-      return res
-        .status(500)
-        .json({ message: "That email is already used" });
+    if (emailExists) {
+      return res.status(500).json({ message: "That email is already used" });
     } else {
-      // Encriptar la contraseña antes de almacenarla en la base de datos
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       await pool.query(
@@ -103,7 +104,9 @@ export const signUp = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({message: "Ha ocurrido un error al intentar registrar el usuario"});
+    return res.status(500).json({
+      message: "Ha ocurrido un error al intentar registrar el usuario",
+    });
   }
 };
 
