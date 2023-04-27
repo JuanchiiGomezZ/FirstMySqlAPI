@@ -24,23 +24,18 @@ export const getUser = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  try {
-    
-    const { name, lastname, email, password } = req.body;
-    const [rows] = await pool.query(
-      "INSERT INTO USER (name, lastname, email, password) VALUES (?,?,?,?)",
-      [name, lastname, email, password]
-    );
-    res.send({
-      id: rows.insertId,
-      name,
-      lastname,
-      email,
-      password,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Something goes wrong" });
-  }
+  const { name, lastname, email, password } = req.body;
+  const [rows] = await pool.query(
+    "INSERT INTO USER (name, lastname, email, password) VALUES (?,?,?,?)",
+    [name, lastname, email, password]
+  );
+  res.send({
+    id: rows.insertId,
+    name,
+    lastname,
+    email,
+    password,
+  });
 };
 
 export const deleteUser = async (req, res) => {
@@ -89,21 +84,12 @@ export const login = async (req, res) => {
     }
 
     const user = rows[0];
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      "mysecretkey",
-      { expiresIn: "2 days" }
-    );
+    const token = jwt.sign({ id: user.id, email: user.email }, "mysecretkey", {
+      expiresIn: "2 days",
+    });
 
     res.json({ token });
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
-
-
-
-
-
-
