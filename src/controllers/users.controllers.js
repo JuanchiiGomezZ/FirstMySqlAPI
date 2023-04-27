@@ -86,8 +86,10 @@ export const signUp = async (req, res) => {
       [email]
     );
 
-    if (existingUser && existingUser.length > 0) {
-      return res.status(500).json({ existingUser });
+    if (existingUser.length > 0) {
+      return res
+        .status(500)
+        .json({ message: "That email is already used" });
     } else {
       // Encriptar la contraseña antes de almacenarla en la base de datos
       const saltRounds = 10;
@@ -97,11 +99,11 @@ export const signUp = async (req, res) => {
         [name, lastname, email, hashedPassword]
       );
       const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-      res.json({ token });
+      return res.json({ token });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Something goes wrong" });
+    return res.status(500).json({message: "Ha ocurrido un error al intentar registrar el usuario"});
   }
 };
 
