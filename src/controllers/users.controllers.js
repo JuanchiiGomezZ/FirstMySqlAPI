@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import jwt from "jsonwebtoken";
 
 export const getUsers = async (req, res) => {
   try {
@@ -74,3 +75,35 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
+
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const [rows] = await pool.query(
+      "SELECT * FROM user WHERE email = ? AND password = ?",
+      [email, password]
+    );
+
+    if (rows.length === 0) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const user = rows[0];
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      "mysecretkey",
+      { expiresIn: "2 days" }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+
+
+
+
+
+
