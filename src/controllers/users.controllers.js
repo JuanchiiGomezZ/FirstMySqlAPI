@@ -76,7 +76,7 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const signUp = async (req, res, next) => {
+export const signUp = async (req, res) => {
   try {
     const { name, lastname, email, password } = req.body;
 
@@ -86,6 +86,7 @@ export const signUp = async (req, res, next) => {
       [email]
     );
     if (existingUser.length > 0) {
+      console.log(existingUser.length)
       return res.status(500).json({ message: "That email already exists" });
     } else {
       // Encriptar la contraseña antes de almacenarla en la base de datos
@@ -101,6 +102,7 @@ export const signUp = async (req, res, next) => {
 
     res.json({ token });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
@@ -112,7 +114,7 @@ export const login = async (req, res) => {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
-
+    
     if (rows.length === 0) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
