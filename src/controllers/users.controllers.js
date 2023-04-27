@@ -24,18 +24,22 @@ export const getUser = async (req, res) => {
 };
 
 export const createUser = async (req, res) => {
-  const { name, lastname, email, password } = req.body;
-  const [rows] = await pool.query(
-    "INSERT INTO USER (name, lastname, email, password) VALUES (?,?,?,?)",
-    [name, lastname, email, password]
-  );
-  res.send({
-    id: rows.insertId,
-    name,
-    lastname,
-    email,
-    password,
-  });
+  try {
+    const { name, lastname, email, password } = req.body;
+    const [rows] = await pool.query(
+      "INSERT INTO user (name, lastname, email, password) VALUES (?,?,?,?)",
+      [name, lastname, email, password]
+    );
+    res.send({
+      id: rows.insertId,
+      name,
+      lastname,
+      email,
+      password,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
 };
 
 export const deleteUser = async (req, res) => {
