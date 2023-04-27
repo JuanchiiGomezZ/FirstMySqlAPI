@@ -87,7 +87,7 @@ export const signUp = async (req, res) => {
     );
 
     if (existingUser && existingUser.length > 0) {
-      return res.status(500).json({ message: "That email is already used" });
+      return res.status(500).json({ existingUser });
     } else {
       // Encriptar la contraseña antes de almacenarla en la base de datos
       const saltRounds = 10;
