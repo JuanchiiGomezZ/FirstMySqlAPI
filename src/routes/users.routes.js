@@ -12,6 +12,7 @@ import {
   addFav,
   getAllFavs,
   getFavsUser,
+  deleteFav
 } from "../controllers/favorite.controller.js";
 
 const router = Router();
@@ -34,5 +35,6 @@ router.post("/login", login);
 router.post("/favorite/:user_id", addFav);
 router.get("/favorite/:user_id", getFavsUser);
 router.get("/favorite", getAllFavs);
+router.delete("/favorite/:fav_id", deleteFav);
 
 export default router;
