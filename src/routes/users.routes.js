@@ -12,22 +12,17 @@ import {
   addFav,
   getAllFavs,
   getFavsUser,
-  deleteFav
+  deleteFav,
 } from "../controllers/favorite.controller.js";
 
 const router = Router();
 
-/* NUEVO */
 router.get("/users", getUsers);
 router.get("/users/:id", verifyToken, getUser);
 
 router.delete("/users/:id", verifyToken, deleteUser);
 
-router.patch(
-  "/users/:id",
-  verifyToken,
-  updateUser
-); /* PATCH PARA MODIFICAR PARCIALMENTE || PUT PARA MODIFICAR TODO */
+router.patch("/users/:id", verifyToken, updateUser);
 
 router.post("/signUp", signUp);
 router.post("/login", login);

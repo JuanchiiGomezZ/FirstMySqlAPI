@@ -77,6 +77,17 @@ export const getUser = async (req, res) => {
 export const signUp = async (req, res, next) => {
   try {
     const { name, lastname, email, password } = req.body;
+
+    // Verificar si el correo electrónico ya está en uso
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (existingUser.length > 0) {
+      return res.status(500).json({ message: "That email already exists" });
+    }
+
+    // Insertar el nuevo usuario en la base de datos
     await pool.query(
       "INSERT INTO users (name, lastname, email, password) VALUES (?, ?, ?, ?)",
       [name, lastname, email, password]
@@ -85,13 +96,7 @@ export const signUp = async (req, res, next) => {
     const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
     res.json({ token });
   } catch (error) {
-    if (error.errno == 1048) {
-      return res.status(500).json({ message: "Check all the information" });
-    } else if (error.errno == 1062) {
-      return res.status(500).json({ message: "That email already exists" });
-    } else {
-      return res.status(500).json({ message: "Something goes wrong" });
-    }
+    return res.status(500).json({ message: "Something goes wrong" });
   }
 };
 
