@@ -1,17 +1,17 @@
 -- CREATE DATABASE IF NOT EXISTS companydb;
 
 -- USE companydb;
-
+RENAME TABLE users TO users_vieja;
 CREATE TABLE users (
   id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL,
   lastname VARCHAR(45) NOT NULL,
-  email VARCHAR(45) NOT NULL,
-  password VARCHAR(45) NOT NULL,
+  email VARCHAR(45) UNIQUE NOT NULL,
+  hashedpassword VARCHAR(90) NOT NULL,
   PRIMARY KEY(id)
 );
 
-DESCRIBE user;
+
 
 INSERT INTO users values 
   (1, 'Ryan', 'Ray', 'Ryan@gmail.com', '123456a'),
