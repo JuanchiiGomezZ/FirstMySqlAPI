@@ -76,10 +76,11 @@ export const verifyToken = (req, res, next) => {
 
 export const signUp = async (req, res) => {
   const { name, lastname, email, password } = req.body;
+  const emailLowerCase = email.toLowerCase();
   try {
     const [existingUser] = await pool.query(
       "SELECT * FROM users WHERE email = ?",
-      [email]
+      emailLowerCase
     );
     if (existingUser.length > 0) {
       return res.status(500).json({ message: "That email is already used" });
@@ -87,11 +88,11 @@ export const signUp = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
       "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
-      [name, lastname, email, hashedPassword]
+      [name, lastname, emailLowerCase, hashedPassword]
     );
 
     const [newUser] = await pool.query("SELECT * FROM users WHERE email = ?", [
-      email,
+      emailLowerCase,
     ]);
     const user = newUser[0];
     const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
@@ -111,9 +112,10 @@ export const signUp = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  const emailLowerCase = email.toLowerCase();
   try {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
-      email,
+      emailLowerCase,
     ]);
 
     if (rows.length === 0) {
@@ -133,13 +135,8 @@ export const login = async (req, res) => {
       token,
     });
   } catch (error) {
-    return res.status(500).json(error);
+    return res
+      .status(500)
+      .json({ message: "Something goes wrong", error: error });
   }
 };
-
-/* 
-
-Empecé hace un par de dias con NodeJS y MySQL, estoy desde ayer intentando solucionar un problema el cual en desarrollo no lo tengo pero si en producción, o sea con la BD y codigo hosteado en railway, no logro entender el por que pasa eso, ya eliminé la tablas y usé el mismo comando en mysql y en railway por si era problema de la BD, pero al parecer no.
-El error es que en esta función de Registrar usuario, primero quiero comprobar si el email ya se encuentra registrado en la BD, en localhost funciona todo bien pero con la API en railway, no sé la razón pero al crear un nuevo usuario inexistente el la BD me hace el res.status(500).json({ message: "That email is already used" }); y tambien lo crea al nuevo usuario.
-
-*/
