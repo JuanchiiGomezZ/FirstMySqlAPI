@@ -43,7 +43,6 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
 export const getUser = async (req, res) => {
   try {
     const id = req.params.id;
@@ -56,33 +55,6 @@ export const getUser = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
-export const signUp = async (req, res) => {
-  const { name, lastname, email, password } = req.body;
-  try {
-    const [existingUser] = await pool.query(
-      "SELECT * FROM users WHERE email = ?",
-      [email]
-    );
-    if (existingUser.length > 0) {
-      return res.status(500).json({ message: "That email is already used" });
-    }
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    await pool.query(
-      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
-      [name, lastname, email, hashedPassword]
-    );
-    const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-    return res.json({ token });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Ha ocurrido un error al intentar registrar el usuario",
-    });
-  }
-};
-
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];
@@ -101,10 +73,37 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
+export const signUp = async (req, res) => {
+  const { name, lastname, email, password } = req.body;
+  try {
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (existingUser.length > 0) {
+      return res.status(500).json({ message: "That email is already used" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await pool.query(
+      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
+      [name, lastname, email, hashedPassword]
+    );
+    res.send("Succesfully logged in")
+/*     const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
+    return res.json({ token }); */
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Ha ocurrido un error al intentar registrar el usuario",
+    });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
@@ -116,16 +115,16 @@ export const login = async (req, res) => {
     const user = rows[0];
     const passwordMatch = await bcrypt.compare(password, user.hashedpassword);
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid password" });
     }
-
-    const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
+    res.send("Succesfully logged in")
+    /* const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
       expiresIn: "2 days",
-    });
+    }); */
 
     res.json({ token });
   } catch (error) {
-    return res.status(500).json({ message: "Something goes wrong" });
+    return res.status(500).json(error);
   }
 };
 
@@ -135,4 +134,3 @@ Empecé hace un par de dias con NodeJS y MySQL, estoy desde ayer intentando solu
 El error es que en esta función de Registrar usuario, primero quiero comprobar si el email ya se encuentra registrado en la BD, en localhost funciona todo bien pero con la API en railway, no sé la razón pero al crear un nuevo usuario inexistente el la BD me hace el res.status(500).json({ message: "That email is already used" }); y tambien lo crea al nuevo usuario.
 
 */
-
