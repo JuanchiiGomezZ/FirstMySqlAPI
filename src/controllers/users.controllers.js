@@ -64,9 +64,7 @@ export const signUp = async (req, res) => {
       "SELECT COUNT(*) AS count FROM users WHERE email = ?",
       [email]
     );
-    if (existingEmail[0].count > 0) {
-      return res.status(500).json({ message: "That email is already used" });
-    } else {
+    if (existingEmail[0].count <= 0) {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       await pool.query(
@@ -75,6 +73,8 @@ export const signUp = async (req, res) => {
       );
       const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
       return res.json({ token });
+    } else {
+      return res.status(500).json({ message: "That email is already used" });
     }
   } catch (error) {
     console.log(error);
