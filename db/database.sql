@@ -8,6 +8,7 @@ CREATE TABLE users (
   lastname VARCHAR(45) NOT NULL,
   email VARCHAR(45) UNIQUE NOT NULL,
   hashedpassword VARCHAR(90) NOT NULL,
+  profilePic VARCHAR(60) NOT NULL
   PRIMARY KEY(id)
 );
 

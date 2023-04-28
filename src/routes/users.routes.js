@@ -14,6 +14,7 @@ import {
   getFavsUser,
   deleteFav,
 } from "../controllers/favorite.controller.js";
+import { validateSignUpCreate, validateLoginCreate } from "../validator/users.js";
 
 const router = Router();
 
@@ -24,8 +25,8 @@ router.delete("/users/:id", verifyToken, deleteUser);
 
 router.patch("/users/:id", verifyToken, updateUser);
 
-router.post("/signUp", signUp);
-router.post("/login", login);
+router.post("/signUp", validateSignUpCreate, signUp);
+router.post("/login",validateLoginCreate,  login);
 
 router.post("/favorite/:user_id", addFav);
 router.get("/favorite/:user_id", getFavsUser);

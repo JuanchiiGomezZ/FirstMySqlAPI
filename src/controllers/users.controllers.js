@@ -73,9 +73,8 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
-
 export const signUp = async (req, res) => {
-  const { name, lastname, email, password } = req.body;
+  const { name, lastname, email, password, profilepic } = req.body;
   const emailLowerCase = email.toLowerCase();
   try {
     const [existingUser] = await pool.query(
@@ -87,8 +86,8 @@ export const signUp = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
-      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
-      [name, lastname, emailLowerCase, hashedPassword]
+      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?, ?)",
+      [name, lastname, emailLowerCase, hashedPassword, profilepic]
     );
 
     const [newUser] = await pool.query("SELECT * FROM users WHERE email = ?", [
@@ -99,7 +98,7 @@ export const signUp = async (req, res) => {
       expiresIn: "2 days",
     });
     return res.status(201).json({
-      message: "Logged in succesfully",
+      message: "User signed up successfully",
       token,
     });
   } catch (error) {
@@ -109,17 +108,16 @@ export const signUp = async (req, res) => {
     });
   }
 };
-
 export const login = async (req, res) => {
-  const { email, password } = req.body;
-  const emailLowerCase = email.toLowerCase();
   try {
+    const { email, password } = req.body;
+    const emailLowerCase = email.toLowerCase();
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [
       emailLowerCase,
     ]);
 
     if (rows.length === 0) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid Email" });
     }
 
     const user = rows[0];
@@ -127,11 +125,13 @@ export const login = async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
+
     const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
       expiresIn: "2 days",
     });
+
     return res.status(201).json({
-      message: "User signed up succesfully",
+      message: "Logged in successfully",
       token,
     });
   } catch (error) {

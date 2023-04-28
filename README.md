@@ -31,11 +31,11 @@ GET https://firstmysqlapi-production.up.railway.app/api/favorite/<<user_id>>
 ### TODO
 
 - [ ] upload images
-- [✅ ] Sign Up
-- [✅ ] Login
-- [✅ ] Fav shows
+- [✅] Sign Up
+- [✅] Login
+- [✅] Fav shows
 - [✅] create authentication and authorization
-- [ ] add validation
+- [✅] add validation
 - [ ] improve error handling
 - [ ] complete the tests
 - [ ] docker for production
