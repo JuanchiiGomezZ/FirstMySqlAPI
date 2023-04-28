@@ -57,23 +57,32 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const signUp = async (req, res, next) => {
+export const signUp = async (req, res) => {
+  const { name, lastname, email, password } = req.body;
   try {
-    const { name, lastname, email, password } = req.body;
+    const [existingUser] = await pool.query(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+    if (existingUser.length > 0) {
+      return res.status(500).json({ message: "That email is already used" });
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     await pool.query(
       "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
       [name, lastname, email, hashedPassword]
     );
-    next();
-
+    const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
+    return res.json({ token });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
-      message: "Something goes wrong",
+      message: "Ha ocurrido un error al intentar registrar el usuario",
     });
   }
 };
+
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader.split(" ")[1];
@@ -126,3 +135,4 @@ Empecé hace un par de dias con NodeJS y MySQL, estoy desde ayer intentando solu
 El error es que en esta función de Registrar usuario, primero quiero comprobar si el email ya se encuentra registrado en la BD, en localhost funciona todo bien pero con la API en railway, no sé la razón pero al crear un nuevo usuario inexistente el la BD me hace el res.status(500).json({ message: "That email is already used" }); y tambien lo crea al nuevo usuario.
 
 */
+
