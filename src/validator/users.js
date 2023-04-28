@@ -2,8 +2,8 @@ import { check } from "express-validator";
 import { validationResult } from "express-validator";
 
 export const validateSignUpCreate = [
-  check("name").exists().not().isEmpty().isAlpha().trim(),
-  check("lastname").exists().not().isEmpty().isAlpha().trim(),
+  check("name").exists().not().isEmpty().trim(),
+  check("lastname").exists().not().isEmpty().trim(),
   check("email").exists().not().isEmpty().isEmail().trim(),
   check("password").exists().not().isEmpty().isStrongPassword(),
   check("profilepic").exists().not().isEmpty().isURL(),

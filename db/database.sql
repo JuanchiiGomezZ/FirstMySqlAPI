@@ -14,12 +14,7 @@ CREATE TABLE users (
 
 
 
-INSERT INTO users values 
-  (1, 'Ryan', 'Ray', 'Ryan@gmail.com', '123456a'),
-  (2, 'Joe', 'McMillan', 'Joe@gmail.com', '123456a'),
-  (3, 'John', 'Carter', 'John@gmail.com', '123456a');
 
-SELECT * FROM user;
 
 
 
