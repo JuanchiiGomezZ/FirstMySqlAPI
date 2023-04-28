@@ -89,14 +89,22 @@ export const signUp = async (req, res) => {
       "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
       [name, lastname, email, hashedPassword]
     );
-    res.send("Succesfully logged in")
-/*     const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-    return res.json({ token }); */
 
+    const [newUser] = await pool.query("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
+    const user = newUser[0];
+    const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
+      expiresIn: "2 days",
+    });
+    return res.status(201).json({
+      message: "Logged in succesfully",
+      token,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Ha ocurrido un error al intentar registrar el usuario",
+      message: "Something goes wrong",
     });
   }
 };
@@ -117,12 +125,13 @@ export const login = async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
-    res.send("Succesfully logged in")
-    /* const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
+    const token = jwt.sign({ id: user.id, email: user.email }, TOKEN_KEY, {
       expiresIn: "2 days",
-    }); */
-
-    res.json({ token });
+    });
+    return res.status(201).json({
+      message: "User signed up succesfully",
+      token,
+    });
   } catch (error) {
     return res.status(500).json(error);
   }
