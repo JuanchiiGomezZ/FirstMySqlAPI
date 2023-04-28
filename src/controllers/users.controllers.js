@@ -86,7 +86,7 @@ export const signUp = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
-      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO users (name, lastname, email, hashedpassword, profilepic) VALUES (?, ?, ?, ?, ?)",
       [name, lastname, emailLowerCase, hashedPassword, profilepic]
     );
 
@@ -104,7 +104,7 @@ export const signUp = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      message: "Something goes wrong",
+      message: error,
     });
   }
 };
