@@ -57,18 +57,17 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const signUp = async (req, res) => {
+export const signUp = async (req, res, next) => {
   try {
     const { name, lastname, email, password } = req.body;
-
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     await pool.query(
       "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
       [name, lastname, email, hashedPassword]
     );
-    const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-    return res.json({ token });
+    next();
+
   } catch (error) {
     return res.status(500).json({
       message: "Something goes wrong",

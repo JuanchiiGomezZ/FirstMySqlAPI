@@ -24,7 +24,7 @@ router.delete("/users/:id", verifyToken, deleteUser);
 
 router.patch("/users/:id", verifyToken, updateUser);
 
-router.post("/signUp", signUp);
+router.post("/signUp", signUp, login);
 router.post("/login", login);
 
 router.post("/favorite/:user_id", addFav);
