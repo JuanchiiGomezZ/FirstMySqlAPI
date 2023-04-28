@@ -60,24 +60,16 @@ export const getUser = async (req, res) => {
 export const signUp = async (req, res) => {
   try {
     const { name, lastname, email, password } = req.body;
-    const [existingEmail] = await pool.query(
-      "SELECT COUNT(*) AS count FROM users WHERE email = ?",
-      [email]
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    await pool.query(
+      "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
+      [name, lastname, email, hashedPassword]
     );
-    if (existingEmail[0].count <= 0) {
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      await pool.query(
-        "INSERT INTO users (name, lastname, email, hashedpassword) VALUES (?, ?, ?, ?)",
-        [name, lastname, email, hashedPassword]
-      );
-      const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
-      return res.json({ token });
-    } else {
-      return res.status(500).json({ message: "That email is already used" });
-    }
+    const token = jwt.sign({ email }, TOKEN_KEY, { expiresIn: "2 days" });
+    return res.json({ token });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
       message: "Something goes wrong",
     });
