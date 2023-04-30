@@ -98,7 +98,7 @@ export const signUp = async (req, res) => {
       expiresIn: "2 days",
     });
     return res.status(201).json({
-      message: "User signed up successfully",
+      user_id: user.id,
       token,
     });
   } catch (error) {
@@ -131,7 +131,7 @@ export const login = async (req, res) => {
     });
 
     return res.status(201).json({
-      message: "Logged in successfully",
+      user_id: user.id,
       token,
     });
   } catch (error) {
