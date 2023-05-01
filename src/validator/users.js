@@ -7,6 +7,7 @@ export const validateSignUpCreate = [
   check("email").exists().not().isEmpty().isEmail().trim(),
   check("password").exists().not().isEmpty().isStrongPassword(),
   check("profilepic").exists().not().isEmpty().isURL(),
+  check("username").exists().not().isEmpty(),
   (req, res, next) => {
     try {
       validationResult(req).throw();

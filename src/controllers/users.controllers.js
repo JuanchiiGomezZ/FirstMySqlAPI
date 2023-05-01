@@ -74,7 +74,7 @@ export const verifyToken = (req, res, next) => {
   });
 };
 export const signUp = async (req, res) => {
-  const { name, lastname, email, password, profilepic } = req.body;
+  const { name, lastname, email, password, profilepic, username } = req.body;
   const emailLowerCase = email.toLowerCase();
   try {
     const [existingUser] = await pool.query(
@@ -86,8 +86,8 @@ export const signUp = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     await pool.query(
-      "INSERT INTO users (name, lastname, email, hashedpassword, profilepic) VALUES (?, ?, ?, ?, ?)",
-      [name, lastname, emailLowerCase, hashedPassword, profilepic]
+      "INSERT INTO users (name, lastname, email, hashedpassword, profilepic, username) VALUES (?, ?, ?, ?, ?, ?)",
+      [name, lastname, emailLowerCase, hashedPassword, profilepic, username]
     );
 
     const [newUser] = await pool.query("SELECT * FROM users WHERE email = ?", [
@@ -102,9 +102,8 @@ export const signUp = async (req, res) => {
       token,
     });
   } catch (error) {
-    console.log(error);
     return res.status(500).json({
-      message: error,
+      message: "Something goes wrong",
     });
   }
 };
