@@ -139,3 +139,21 @@ export const login = async (req, res) => {
       .json({ message: "Something goes wrong", error: error });
   }
 };
+
+export const signUpConfirmation = async (req, res) => {
+  try {
+    const { id, profilepic, username } = req.body;
+    const [result] = await pool.query(
+      "UPDATE users SET profilepic = IFNULL(?, profilepic), username = IFNULL(?, username) WHERE id=?",
+      [profilepic, username, id]
+    );
+    if (result.affectedRows == 0) {
+      return res.status(404).json({ message: "User not found" });
+    } else {
+      const [rows] = await pool.query("SELECT * FROM users WHERE id=?", [id]);
+      res.json(rows[0]);
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};

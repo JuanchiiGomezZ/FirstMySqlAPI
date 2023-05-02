@@ -7,6 +7,7 @@ import {
   updateUser,
   login,
   verifyToken,
+  signUpConfirmation,
 } from "../controllers/users.controllers.js";
 import {
   addFav,
@@ -29,6 +30,7 @@ router.delete("/users/:id", verifyToken, deleteUser);
 router.patch("/users/:id", verifyToken, updateUser);
 
 router.post("/signUp", validateSignUpCreate, signUp);
+router.patch("/signUp/Confirmation", signUpConfirmation);
 router.post("/login", validateLoginCreate, login);
 
 router.post("/favorite/:user_id", verifyToken, addFav);
