@@ -3,13 +3,13 @@ import jwt from "jsonwebtoken";
 
 export const addFav = async (req, res) => {
   try {
-    const { media_type, media_id, backdrop, showname, year, duration } =
+    const { media_type, media_id, backdrop, showname, year, duration, score } =
       req.body;
     const user_id = req.params.user_id;
 
     await pool.query(
-      "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [user_id, media_type, media_id, backdrop, showname, year, duration]
+      "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [user_id, media_type, media_id, backdrop, showname, year, duration, score]
     );
 
     res.json({ message: "Added to favorites successfully" });

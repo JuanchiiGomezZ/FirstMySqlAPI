@@ -33,7 +33,4 @@ CREATE TABLE favsshow (
   duration VARCHAR(55) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
-ALTER TABLE favsShow ADD backdrop VARCHAR(55) NOT NULL;
-ALTER TABLE favsShow ADD showname VARCHAR(55) NOT NULL;
-ALTER TABLE favsShow ADD year VARCHAR(55) NOT NULL;
-ALTER TABLE favsShow ADD duration VARCHAR(55) NOT NULL;
+ALTER TABLE favsshow ADD score INT(5) NOT NULL;
