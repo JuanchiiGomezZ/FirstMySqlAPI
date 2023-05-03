@@ -3,12 +3,13 @@ import jwt from "jsonwebtoken";
 
 export const addFav = async (req, res) => {
   try {
-    const { media_type, media_id } = req.body;
+    const { media_type, media_id, backdrop, showname, year, duration } =
+      req.body;
     const user_id = req.params.user_id;
 
     await pool.query(
-      "INSERT INTO favsshow (user_id, media_type, media_id) VALUES (?, ?, ?)",
-      [user_id, media_type, media_id]
+      "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [user_id, media_type, media_id, backdrop, showname, year, duration]
     );
 
     res.json({ message: "Added to favorites successfully" });
@@ -44,15 +45,17 @@ export const getFavsUser = async (req, res) => {
 };
 
 export const deleteFav = async (req, res) => {
-    try {
-      const fav_id = req.params.fav_id;
-      const [result] = await pool.query(`DELETE FROM favsshow WHERE id = ?`, [fav_id]);
-      if (result.affectedRows <= 0) {
-        return res.status(404).json({ message: "Fav not found" });
-      } else {
-        res.sendStatus(204);
-      }
-    } catch (error) {
-      return res.status(500).json({ message: "Something goes wrong" });
+  try {
+    const fav_id = req.params.fav_id;
+    const [result] = await pool.query(`DELETE FROM favsshow WHERE id = ?`, [
+      fav_id,
+    ]);
+    if (result.affectedRows <= 0) {
+      return res.status(404).json({ message: "Fav not found" });
+    } else {
+      res.sendStatus(204);
     }
-  };
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};

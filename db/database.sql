@@ -21,11 +21,19 @@ ALTER TABLE users ADD username VARCHAR(55) NOT NULL;
 
 
 
-CREATE TABLE favsShow (
+CREATE TABLE favsshow (
   id INT(20) NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
   media_type VARCHAR(10) NOT NULL,
   media_id INT NOT NULL,
   PRIMARY KEY (id),
+  showname VARCHAR(55) NOT NULL,
+  backdrop VARCHAR(55) NOT NULL,
+  year VARCHAR(55) NOT NULL,
+  duration VARCHAR(55) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
+ALTER TABLE favsShow ADD backdrop VARCHAR(55) NOT NULL;
+ALTER TABLE favsShow ADD showname VARCHAR(55) NOT NULL;
+ALTER TABLE favsShow ADD year VARCHAR(55) NOT NULL;
+ALTER TABLE favsShow ADD duration VARCHAR(55) NOT NULL;
