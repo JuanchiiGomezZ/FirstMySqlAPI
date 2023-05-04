@@ -33,4 +33,4 @@ CREATE TABLE favsshow (
   duration VARCHAR(55) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
-ALTER TABLE favsshow ADD score INT(5) NOT NULL;
+ALTER TABLE favsshow ADD posrter VARCHAR(55) NOT NULL;
