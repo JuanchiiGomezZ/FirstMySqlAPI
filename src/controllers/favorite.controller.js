@@ -54,7 +54,7 @@ export const getFavsUser = async (req, res) => {
       [id]
     );
     if (rows.length <= 0) {
-      return res.status(404).json({ message: "The user doesnt have favs" });
+      return res.json([]);
     }
     res.json(rows);
   } catch (error) {
