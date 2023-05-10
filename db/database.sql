@@ -21,6 +21,7 @@ ALTER TABLE users ADD username VARCHAR(55) NOT NULL;
 
 
 
+
 CREATE TABLE favsshow (
   id INT(20) NOT NULL AUTO_INCREMENT,
   user_id INT NOT NULL,
@@ -31,6 +32,8 @@ CREATE TABLE favsshow (
   backdrop VARCHAR(55) NOT NULL,
   year VARCHAR(55) NOT NULL,
   duration VARCHAR(55) NOT NULL,
+  poster VARCHAR(55) NOT NULL,
+  score FLOAT(20) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id)
-);
-ALTER TABLE favsshow ADD posrter VARCHAR(55) NOT NULL;
+)
+ALTER TABLE favsshow ADD poster VARCHAR(55) NOT NULL;
