@@ -1,10 +1,10 @@
 # Nodejs MYSQL REST API
 
-
 ### Documentation
+
 ```
 Create new user
-POST https://firstmysqlapi-production.up.railway.app/api/SignUp {name,lastname,email,password}
+POST https://firstmysqlapi-production.up.railway.app/api/SignUp {name,lastname,email,password, profilepic, username}
 
 Login
 POST https://firstmysqlapi-production.up.railway.app/api/Login {email,password}

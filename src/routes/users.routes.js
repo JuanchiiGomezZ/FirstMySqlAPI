@@ -4,7 +4,6 @@ import {
   getUser,
   signUp,
   deleteUser,
-  updateUser,
   login,
   verifyToken,
   signUpConfirmation,
@@ -22,20 +21,17 @@ import {
 
 const router = Router();
 
-router.get("/users", getUsers);
-router.get("/users/:id", verifyToken, getUser);
-
-router.delete("/users/:id", verifyToken, deleteUser);
-
-router.patch("/users/:id", verifyToken, updateUser);
-
 router.post("/signUp", validateSignUpCreate, signUp);
 router.patch("/signUp/Confirmation", signUpConfirmation);
 router.post("/login", validateLoginCreate, login);
 
-router.post("/favorite/:user_id", verifyToken, addFav);
-router.get("/favorite/:user_id", verifyToken, getFavsUser);
-router.get("/favorite", verifyToken, getAllFavs);
+router.get("/user", verifyToken, getUser);
+
+router.post("/favorite", verifyToken, addFav);
+router.get("/favorite", verifyToken, getFavsUser);
 router.delete("/favorite/:fav_id", verifyToken, deleteFav);
 
+/* router.delete("/users", verifyToken, deleteUser);
+router.get("/favorite", verifyToken, getAllFavs);
+router.get("/users", getUsers); */
 export default router;

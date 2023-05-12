@@ -30,7 +30,6 @@ CREATE TABLE favsshow (
   PRIMARY KEY (id),
   showname VARCHAR(55) NOT NULL,
   backdrop VARCHAR(55) NOT NULL,
-  year VARCHAR(55) NOT NULL,
   duration VARCHAR(55) NOT NULL,
   poster VARCHAR(55) NOT NULL,
   score FLOAT(20) NOT NULL,

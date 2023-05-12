@@ -1,5 +1,5 @@
 import { pool } from "../db.js";
-import jwt from "jsonwebtoken";
+
 
 export const addFav = async (req, res) => {
   try {
@@ -13,7 +13,7 @@ export const addFav = async (req, res) => {
       score,
       poster,
     } = req.body;
-    const user_id = req.params.user_id;
+    const user_id = req.userId;
 
     await pool.query(
       "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration, score, poster) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)",
@@ -36,19 +36,9 @@ export const addFav = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
-export const getAllFavs = async (req, res) => {
-  try {
-    const [rows] = await pool.query("SELECT * FROM favsshow");
-    res.json(rows);
-  } catch (error) {
-    return res.status(500).json({ message: "Something goes wrong" });
-  }
-};
-
 export const getFavsUser = async (req, res) => {
   try {
-    const id = req.params.user_id;
+    const id = req.userId;
     const [rows] = await pool.query(
       `SELECT * FROM favsshow WHERE user_id = ?`,
       [id]
@@ -61,7 +51,6 @@ export const getFavsUser = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
 export const deleteFav = async (req, res) => {
   try {
     const fav_id = req.params.fav_id;
@@ -73,6 +62,17 @@ export const deleteFav = async (req, res) => {
     } else {
       res.sendStatus(204);
     }
+  } catch (error) {
+    return res.status(500).json({ message: "Something goes wrong" });
+  }
+};
+
+
+
+export const getAllFavs = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM favsshow");
+    res.json(rows);
   } catch (error) {
     return res.status(500).json({ message: "Something goes wrong" });
   }
