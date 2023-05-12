@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 
 const TOKEN_KEY = process.env.TOKEN_KEY;
 
-
 export const getUser = async (req, res) => {
   try {
     const id = req.userId;
@@ -100,13 +99,10 @@ export const login = async (req, res) => {
   }
 };
 
-
-
-
-
 export const signUpConfirmation = async (req, res) => {
   try {
-    const { id, profilepic, username } = req.body;
+    const id = req.userId;
+    const { profilepic, username } = req.body;
     const [result] = await pool.query(
       "UPDATE users SET profilepic = IFNULL(?, profilepic), username = IFNULL(?, username) WHERE id=?",
       [profilepic, username, id]

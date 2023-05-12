@@ -22,7 +22,7 @@ import {
 const router = Router();
 
 router.post("/signUp", validateSignUpCreate, signUp);
-router.patch("/signUp/Confirmation", signUpConfirmation);
+router.patch("/signUp/Confirmation", verifyToken, signUpConfirmation);
 router.post("/login", validateLoginCreate, login);
 
 router.get("/user", verifyToken, getUser);
