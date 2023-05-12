@@ -3,29 +3,23 @@
 ### Documentation
 
 ```
-Create new user
-POST https://firstmysqlapi-production.up.railway.app/api/SignUp {name,lastname,email,password, profilepic, username}
+SignUp
+POST baseUrl/api/signUp {name,lastname,email,password, profilepic, username}
 
 Login
-POST https://firstmysqlapi-production.up.railway.app/api/Login {email,password}
+POST baseUrl/api/login {email,password}
 
-Get all users
-GET https://firstmysqlapi-production.up.railway.app/api/users
-
-Get user by ID
-GET https://firstmysqlapi-production.up.railway.app/api/users/<<ID>>
-
-Delete user
-DELETE https://firstmysqlapi-production.up.railway.app/api/users/<<ID>>
+Get user data
+GET baseUrl/api/user
 
 ADD favorite
-POST https://firstmysqlapi-production.up.railway.app/api/favorite/<<user_id>>
+POST baseUrl/api/favorite { media_type, media_id, backdrop,showname,year,duration,score,poster,}
 
 DELETE favorite
-DELETE https://firstmysqlapi-production.up.railway.app/api/favorite/<<fav_id>>
+DELETE baseUrl/api/favorite/<<fav_id>>
 
 GET user favs
-GET https://firstmysqlapi-production.up.railway.app/api/favorite/<<user_id>>
+GET baseUrl/api/favorite
 ```
 
 ### TODO
