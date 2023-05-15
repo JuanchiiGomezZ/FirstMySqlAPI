@@ -1,6 +1,5 @@
 import { pool } from "../db.js";
 
-
 export const addFav = async (req, res) => {
   try {
     const {
@@ -15,27 +14,38 @@ export const addFav = async (req, res) => {
     } = req.body;
     const user_id = req.userId;
 
-    await pool.query(
-      "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration, score, poster) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)",
-      [
-        user_id,
-        media_type,
-        media_id,
-        backdrop,
-        showname,
-        year,
-        duration,
-        score,
-        poster,
-      ]
+    const result = await pool.query(
+      "SELECT COUNT(*) AS count FROM favsshow WHERE user_id = ? AND media_id = ? AND media_type = ?",
+      [user_id, media_id, media_type]
     );
 
-    res.json({ message: "Added to favorites successfully" });
+    if (result[0][0].count >= 1) {
+      return res.status(409).json({
+        message: "Show already added",
+      });
+    } else {
+      await pool.query(
+        "INSERT INTO favsshow (user_id, media_type, media_id, backdrop, showname, year, duration, score, poster) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [
+          user_id,
+          media_type,
+          media_id,
+          backdrop,
+          showname,
+          year,
+          duration,
+          score,
+          poster,
+        ]
+      );
+      res.json({ message: "Added to favorites successfully" });
+    }
   } catch (error) {
     res.send(error);
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
+
 export const getFavsUser = async (req, res) => {
   try {
     const id = req.userId;
@@ -66,8 +76,6 @@ export const deleteFav = async (req, res) => {
     return res.status(500).json({ message: "Something goes wrong" });
   }
 };
-
-
 
 export const getAllFavs = async (req, res) => {
   try {

@@ -36,3 +36,5 @@ CREATE TABLE favsshow (
   FOREIGN KEY (user_id) REFERENCES users(id)
 )
 ALTER TABLE favsshow ADD poster VARCHAR(55) NOT NULL;
+ALTER TABLE favsshow ADD CONSTRAINT unique_Media_id UNIQUE (media_id);
+ALTER TABLE favsshow DROP INDEX unique_Media_id;
