@@ -31,10 +31,9 @@ router.post("/favorite", verifyToken, addFav);
 router.get("/favorite", verifyToken, getFavsUser);
 router.delete("/favorite/:fav_id", verifyToken, deleteFav);
 
-router.get("/allFavs", getAllFavs);
-router.get("/users", getUsers);
+/* router.get("/allFavs", getAllFavs);
+router.get("/users", getUsers); */
 
 /* router.delete("/users", verifyToken, deleteUser);
-router.get("/favorite", verifyToken, getAllFavs);
-router.get("/users", getUsers); */
+router.get("/favorite", verifyToken, getAllFavs);*/
 export default router;

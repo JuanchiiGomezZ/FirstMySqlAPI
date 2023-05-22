@@ -35,6 +35,7 @@ CREATE TABLE favsshow (
   score FLOAT(20) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id)
 )
-ALTER TABLE favsshow ADD poster VARCHAR(55) NOT NULL;
-ALTER TABLE favsshow ADD CONSTRAINT unique_Media_id UNIQUE (media_id);
-ALTER TABLE favsshow DROP INDEX unique_Media_id;
+ALTER TABLE favsshow MODIFY COLUMN backdrop VARCHAR(55) NULL;
+ALTER TABLE favsshow MODIFY COLUMN poster VARCHAR(55) NULL;
+ALTER TABLE favsshow MODIFY COLUMN duration VARCHAR(55) NULL;
+ALTER TABLE favsshow MODIFY COLUMN score VARCHAR(55) NULL;

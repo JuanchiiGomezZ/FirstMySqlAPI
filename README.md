@@ -24,12 +24,12 @@ GET baseUrl/api/favorite
 
 ### TODO
 
-- [ ] upload images
+- [✅ ] upload images
 - [✅] Sign Up
 - [✅] Login
 - [✅] Fav shows
 - [✅] create authentication and authorization
 - [✅] add validation
-- [ ] improve error handling
+- [✅ ] improve error handling
 - [ ] complete the tests
 - [ ] docker for production
