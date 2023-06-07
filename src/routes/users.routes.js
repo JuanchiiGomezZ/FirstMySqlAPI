@@ -31,6 +31,7 @@ router.post("/favorite", verifyToken, addFav);
 router.get("/favorite", verifyToken, getFavsUser);
 router.delete("/favorite/:fav_id", verifyToken, deleteFav);
 
+
 /* router.get("/allFavs", getAllFavs);
 router.get("/users", getUsers); */
 
